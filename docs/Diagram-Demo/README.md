@@ -1,4 +1,4 @@
-# Setting up [Z.Blazor.Diagrams](https://github.com/Blazor-Diagrams/Blazor.Diagrams)
+# Setting up [Stromlab.Blazor.Diagrams](https://github.com/Blazor-Diagrams/Blazor.Diagrams)
 This is a minimal example of intergration into a _Blazor_ app.
 
 ![diagram-demo](diagram-demo.png "Diagram-Demo")
@@ -10,15 +10,15 @@ This is a minimal example of intergration into a _Blazor_ app.
   <!-- ... -->
     
   <!-- in the head element -->
-  <link href="_content/Z.Blazor.Diagrams/style.min.css" rel="stylesheet"/>
+  <link href="_content/Stromlab.Blazor.Diagrams/style.min.css" rel="stylesheet"/>
     
   <!-- if you want the default styling -->
-  <link href="_content/Z.Blazor.Diagrams/default.styles.min.css" rel="stylesheet"/>
+  <link href="_content/Stromlab.Blazor.Diagrams/default.styles.min.css" rel="stylesheet"/>
 </head>
 
 <body>
   <!-- in the body element -->
-  <script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
+  <script src="_content/Stromlab.Blazor.Diagrams/script.min.js"></script>
   
   <!-- ... -->
 <body>
