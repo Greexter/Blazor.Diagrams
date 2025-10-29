@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Blazor.Diagrams.Core.Extensions;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
@@ -82,7 +83,7 @@ public class GroupRenderer : ComponentBase, IDisposable
     {
         if (!Group.Visible)
             return;
-        
+
         var componentType = BlazorDiagram.GetComponent(Group) ?? typeof(DefaultGroupWidget);
         var classes = new StringBuilder("diagram-group")
             .AppendIf(" locked", Group.Locked)
@@ -110,8 +111,8 @@ public class GroupRenderer : ComponentBase, IDisposable
         if (_isSvg)
         {
             builder.OpenElement(10, "rect");
-            builder.AddAttribute(11, "width", Group.Size!.Width);
-            builder.AddAttribute(12, "height", Group.Size.Height);
+            builder.AddAttribute(11, "width", Group.Size!.Width.ToInvariantString());
+            builder.AddAttribute(12, "height", Group.Size.Height.ToInvariantString());
             builder.AddAttribute(13, "fill", "none");
             builder.CloseElement();
         }
