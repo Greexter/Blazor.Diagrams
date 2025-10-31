@@ -84,6 +84,12 @@ public class NodeRenderer : ComponentBase, IDisposable
         return true;
     }
 
+    protected virtual StringBuilder GenerateClasses()
+        => new StringBuilder("diagram-node")
+            .AppendIf(" locked", Node.Locked)
+            .AppendIf(" selected", Node.Selected)
+            .AppendIf(" grouped", Node.Group != null);
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!Node.Visible)
@@ -91,10 +97,7 @@ public class NodeRenderer : ComponentBase, IDisposable
 
         var componentType = BlazorDiagram.GetComponent(Node) ??
                             (_isSvg ? typeof(SvgNodeWidget) : typeof(NodeWidget));
-        var classes = new StringBuilder("diagram-node")
-            .AppendIf(" locked", Node.Locked)
-            .AppendIf(" selected", Node.Selected)
-            .AppendIf(" grouped", Node.Group != null);
+        var classes = GenerateClasses();
 
         builder.OpenElement(0, _isSvg ? "g" : "div");
         builder.AddAttribute(1, "class", classes.ToString());

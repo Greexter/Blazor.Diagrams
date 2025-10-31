@@ -1,58 +1,80 @@
-﻿<div class="diagram-canvas @Class"
-     tabindex="-1"
-     @ref="elementReference"
-     @onpointerdown="OnPointerDown"
-     @onpointermove="OnPointerMove"
-     @onpointerup="OnPointerUp"
-     @onkeydown="OnKeyDown"
-     @onwheel="OnWheel"
-     @onpointermove:preventDefault
-     @onwheel:stopPropagation>
+﻿<CascadingValue Value="this" IsFixed="true">
+    <div class="diagram-canvas @Class"
+         tabindex="-1"
+         @ref="elementReference"
+         @onpointerdown="OnPointerDown"
+         @onpointermove="OnPointerMove"
+         @onpointerup="OnPointerUp"
+         @onkeydown="OnKeyDown"
+         @onwheel="OnWheel"
+         @onpointermove:preventDefault
+         @onwheel:stopPropagation>
 
-    <svg class="diagram-svg-layer" style="@GetLayerStyle(BlazorDiagram.Options.LinksLayerOrder)">
+        <svg class="diagram-svg-layer" style="@GetLayerStyle(BlazorDiagram.Options.LinksLayerOrder)">
 
-        @foreach (var model in BlazorDiagram.OrderedSelectables)
-        {
-            if (model is SvgNodeModel node && node.Group == null)
+            @foreach (var model in BlazorDiagram.OrderedSelectables)
             {
-                <NodeRenderer @key="node" Node="node" />
-            }
-            else if (model is SvgGroupModel group && group.Group == null)
-            {
-                <GroupRenderer @key="group" Group="group" />
-            }
-            else if (model is BaseLinkModel link)
-            {
-                <LinkRenderer @key="link" Link="link" />
-            }
-        }
-
-        <ControlsLayerRenderer Svg="@true"></ControlsLayerRenderer>
-
-        @AdditionalSvg
-    </svg>
-
-    <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
-
-        @foreach (var model in BlazorDiagram.OrderedSelectables)
-        {
-            if (model is GroupModel group)
-            {
-                if (group.Group == null && group is not SvgGroupModel)
+                if (model is SvgNodeModel node && node.Group == null)
                 {
-                    <GroupRenderer @key="group" Group="group" />
+                    @NodeRendererFragment(node)
+                }
+                else if (model is SvgGroupModel group && group.Group == null)
+                {
+                    @GroupRendererFragment(group)
+                }
+                else if (model is BaseLinkModel link)
+                {
+                    @LinkRendererFragment(link)
                 }
             }
-            else if (model is NodeModel node && node.Group == null && node is not SvgNodeModel)
+
+            <ControlsLayerRenderer Svg="@true"></ControlsLayerRenderer>
+
+            @AdditionalSvg
+        </svg>
+
+        <div class="diagram-html-layer" style="@GetLayerStyle(BlazorDiagram.Options.NodesLayerOrder)">
+
+            @foreach (var model in BlazorDiagram.OrderedSelectables)
             {
-                <NodeRenderer @key="node" Node="node" />
+                if (model is GroupModel group)
+                {
+                    if (group.Group == null && group is not SvgGroupModel)
+                    {
+                        @GroupRendererFragment(group)
+                    }
+                }
+                else if (model is NodeModel node && node.Group == null && node is not SvgNodeModel)
+                {
+                    @NodeRendererFragment(node)
+                }
             }
-        }
 
-        <ControlsLayerRenderer Svg="@false"></ControlsLayerRenderer>
+            <ControlsLayerRenderer Svg="@false"></ControlsLayerRenderer>
 
-        @AdditionalHtml
+            @AdditionalHtml
+        </div>
+
+        @Widgets
     </div>
+</CascadingValue>
 
-    @Widgets
-</div>
+@code {
+    [Parameter]
+    public RenderFragment<NodeModel> NodeRendererFragment { get; set; } = node => __builder =>
+    {
+        <NodeRenderer @key=node.Id Node="node" />
+    };
+
+    [Parameter]
+    public RenderFragment<GroupModel> GroupRendererFragment { get; set; } = group => __builder =>
+    {
+        <GroupRenderer @key=group.Id Group="group" />
+    };
+
+    [Parameter]
+    public RenderFragment<BaseLinkModel> LinkRendererFragment { get; set; } = link => __builder =>
+    {
+        <LinkRenderer @key=link.Id Link="link" />
+    };
+}
